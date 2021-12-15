@@ -1,7 +1,6 @@
 #! python3
 
 import click
-from web3 import Web3
 
 # ETHER KEY 5VHZC7JW44R4KPP6PMXG9EQDB5SI1XZFJ9
 # WEB3 INFURA PROJECT ID b252831e0c3b4d8b89eae0adee8e71f0
@@ -16,14 +15,22 @@ def cli():
 
 def initialize_modules():
     """ 
-    Initialize Modules with w3 connection
+        Initialize Modules with w3 connection
+
     """
-    click.echo("Initilizing modules")
+
     from modules.detail import detail
-    cli.add_command(detail)
+    cli.add_command(detail, name="detail")
+    from modules.balanceOf import balanceOf
+    cli.add_command(balanceOf, name="balanceOf")
+    from modules.watchTx import watchTx
+    cli.add_command(watchTx, name="watchTx")
+    from modules.latestTx import get_latest_transactions
+    cli.add_command(get_latest_transactions, name="latestTx")
+    from modules.topHolders import topHolders
+    cli.add_command(topHolders, name="topHolder")
 
 
 if __name__ == '__main__':
     initialize_modules()
-    click.echo('========')
     cli()
