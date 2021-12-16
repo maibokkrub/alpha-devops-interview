@@ -1,6 +1,6 @@
 import click
 from time import sleep
-from utils import generate_explorer_link, get_ERC20contract_instance, get_connection
+from utils import clean_address, generate_explorer_link, get_ERC20contract_instance, get_connection
 
 @click.command()
 @click.argument('contract_address')
@@ -11,7 +11,7 @@ def watchTx(contract_address):
     """
     
     w3 = get_connection()
-    contract_address = w3.toChecksumAddress(contract_address)
+    contract_address = clean_address(contract_address)
     click.echo(f"[INFO] -- Watching tx on {contract_address}, press Ctrl+C to exit --")
 
     try: 

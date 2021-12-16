@@ -1,6 +1,9 @@
 import click
 from utils import get_ERC20contract_instance
 
+if __name__ == '__main__':
+    pass
+
 @click.command()
 @click.argument('contract_address')
 def detail(contract_address):

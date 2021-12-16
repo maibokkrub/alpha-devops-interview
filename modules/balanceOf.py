@@ -1,4 +1,5 @@
 import click
+
 from web3.main import Web3
 from utils import get_ERC20contract_instance
 
@@ -10,6 +11,9 @@ def balanceOf(contract_address, target_address):
         Show the balanceOf target_address on the contract_address in decimals format
     
     """
+    print(__name__)
+    if __name__ == 'main':
+        return
 
     contract = get_ERC20contract_instance(contract_address)
 
