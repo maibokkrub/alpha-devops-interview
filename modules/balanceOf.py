@@ -1,20 +1,16 @@
 import click
 
-from web3.main import Web3
-from utils import get_ERC20contract_instance
-
 @click.command()
 @click.argument('contract_address')
 @click.argument('target_address')
 def balanceOf(contract_address, target_address):
     """
-        Show the balanceOf target_address on the contract_address in decimals format
+        Show the balanceOf target_address on the contract_address 
+        in decimals format
     
     """
-    print(__name__)
-    if __name__ == 'main':
-        return
-
+    from web3.main import Web3
+    from utils import get_ERC20contract_instance
     contract = get_ERC20contract_instance(contract_address)
 
     click.echo("[INFO] Fetching Data")

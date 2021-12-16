@@ -20,7 +20,7 @@ def clean_address(address):
         raise ValueError(f"[ERROR] CANNOT Clean Address {address}")
 
 def get_latest_block():
-    return get_connection().eth.get_block_number()
+    return get_connection(True).eth.get_block_number()
 
 def generate_explorer_link(tx_hash):
     return f"{EXPLORER_BASE}/tx/{tx_hash}"
@@ -30,12 +30,13 @@ def generate_explorer_link(tx_hash):
 ##  Web3 Helpers & Contract Related Utils
 ##
 
-def get_connection(): 
+def get_connection(run=False): 
     """ 
         Initilzes a RPC connection to ETH network
         Returns an connection instance
 
     """
+
     click.echo("[INFO] Connecting to RPC")
     w3 = Web3(Web3.HTTPProvider(RPC_URL))
     if w3.isConnected: 
@@ -43,45 +44,44 @@ def get_connection():
         return w3 
     raise ValueError("[ERROR] Web3 RPC Connection Error")
 
-
 def get_ERC20contract_instance(contract_address): 
     """ 
         Connect and return a web3.eth.contract instance
         using local basic ERC20 abi
 
     """
-    connection = get_connection()
-    contract_address = clean_address(contract_address)
+    if contract_address:
+        connection = get_connection(True)
+        contract_address = clean_address(contract_address)
 
-    click.echo("[INFO] Reading local ERC20 ABI")
-    with open('./abis/ERC20.json') as f:
-        abi = json.load(f)
-    try:
-        return connection.eth.contract(contract_address, abi=abi)
-    except Exception as e: 
-        print(e) 
-
+        click.echo("[INFO] Reading local ERC20 ABI")
+        with open('./abis/ERC20.json') as f:
+            abi = json.load(f)
+        try:
+            return connection.eth.contract(contract_address, abi=abi)
+        except Exception as e: 
+            print(e) 
 
 def fetch_contract_abi(contract_address):
     """ 
         Fetch ABI from etherscan if available
 
     """
-    contract_address = clean_address(contract_address)
-    params = { 
-        "module"    : 'contract',
-        "action"    : 'getabi',
-        "address"   : contract_address, 
-        "apikey"    : API_KEY, 
-    }
+    if contract_address:
+        contract_address = clean_address(contract_address)
+        params = { 
+            "module"    : 'contract',
+            "action"    : 'getabi',
+            "address"   : contract_address, 
+            "apikey"    : API_KEY, 
+        }
 
-    click.echo(f"[INFO] Fetching Contract ABI from etherscan...")
-    result = requests.get(API_URL, params)
-    result = (result.json())['result']
-    if result != 'Contract source code not verified':
-        return result
-    raise ValueError('Invalid or Contract source code not verified')
-
+        click.echo(f"[INFO] Fetching Contract ABI from etherscan...")
+        result = requests.get(API_URL, params)
+        result = (result.json())['result']
+        if result != 'Contract source code not verified':
+            return result
+        raise ValueError('Invalid or Contract source code not verified')
 
 def get_verified_ERC20contract_instance(contract_address): 
     """ 
@@ -89,16 +89,17 @@ def get_verified_ERC20contract_instance(contract_address):
         using an abi fetched from etherscan or else fallback 
         to local ERC20 ABI
 
-    """    
-    connection = get_connection()
-    contract_address = clean_address(contract_address)
+    """
+    if contract_address:
+        connection = get_connection(True)
+        contract_address = clean_address(contract_address)
 
-    try:
-        abi = fetch_contract_abi(contract_address)
-    except ValueError as e:
-        click.echo("[WARNING] ABI not available from etherscan, using local ERC20 abi")
-        return get_ERC20contract_instance(contract_address)
-    return connection.eth.contract(contract_address, abi=abi)
+        try:
+            abi = fetch_contract_abi(contract_address)
+        except ValueError as e:
+            click.echo("[WARNING] ABI not available from etherscan, using local ERC20 abi")
+            return get_ERC20contract_instance(contract_address)
+        return connection.eth.contract(contract_address, abi=abi)
 
 
 

@@ -1,16 +1,17 @@
 import click
 from time import sleep
-from utils import clean_address, generate_explorer_link, get_ERC20contract_instance, get_connection
 
 @click.command()
 @click.argument('contract_address')
 def watchTx(contract_address):
     """
-        Subscribe Tx from the contract_address in watching mode and constantly output the url link to etherscan.io
+        Subscribe Tx from the contract_address in watching mode 
+        and constantly output the url link to etherscan.io
     
     """
-    
-    w3 = get_connection()
+    from utils import clean_address, generate_explorer_link, get_connection
+
+    w3 = get_connection(True)
     contract_address = clean_address(contract_address)
     click.echo(f"[INFO] -- Watching tx on {contract_address}, press Ctrl+C to exit --")
 

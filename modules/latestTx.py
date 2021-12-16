@@ -1,16 +1,17 @@
 import click
 import pandas as pd
-from utils import fetch_contract_last_n_tx, get_verified_ERC20contract_instance
 
 @click.command()
 @click.argument('contract_address')
 @click.argument('amount')
 def get_latest_transactions(contract_address, amount):
     """
-        Generate Latest N to a text file showing sender address, txHash, and decoded call data. 
+        Generate Latest N to a text file 
+        showing sender address, txHash, and decoded call data. 
 
     """
-    
+    from utils import fetch_contract_last_n_tx, get_verified_ERC20contract_instance
+
     contract = get_verified_ERC20contract_instance(contract_address)
     click.echo(f"[INFO] Fetching latest {amount} transactions -- newest to oldest")
     txs = fetch_contract_last_n_tx(contract_address, int(amount))

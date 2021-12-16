@@ -21,24 +21,18 @@ def validate_configurations():
             exit(400)
 
 def initialize_modules():
-    """ 
-    Initialize Modules with w3 connection
-
-    """
-    # from modules.detail import detail
-    # cli.add_command(detail, name="detail")
-    from modules.balanceOf import balanceOf
-    cli.add_command(balanceOf, name="balanceOf")
-    # from modules.watchTx import watchTx
-    # cli.add_command(watchTx, name="watchTx")
-    # from modules.latestTx import get_latest_transactions
-    # cli.add_command(get_latest_transactions, name="latestTx")
-    # from modules.topHolders import topHolders
-    # cli.add_command(topHolders, name="topHolder")
-
+    from modules import detail, balanceOf, watchTx, latestTx, topHolders
+    cli.add_command(detail.detail, name="detail")
+    cli.add_command(balanceOf.balanceOf, name="balanceOf")
+    cli.add_command(watchTx.watchTx, name="watchTx")
+    cli.add_command(latestTx.get_latest_transactions, name="latestTx")
+    cli.add_command(topHolders.topHolders, name="topHolder")
 
 if __name__ == '__main__':
     load_dotenv()
     validate_configurations()
     initialize_modules()
-    cli()
+    try:
+        cli()
+    except Exception as e : 
+        click.echo(e)

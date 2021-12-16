@@ -1,7 +1,6 @@
 import click
 import pandas as pd 
 from time import sleep
-from utils import fetch_contract_transfer_events, get_ERC20contract_instance
 
 @click.command()
 @click.argument('contract_address')
@@ -19,7 +18,8 @@ def topHolders(contract_address, amount):
             allholders-{contract_address}.csv               Contains all holders data 
             topHolders-{amount}-{contract_address}.csv      Contains only top AMOUNT holders
     """
-    
+    from utils import fetch_contract_transfer_events, get_ERC20contract_instance
+
     click.echo("[INFO] Fetching Contract Data")
     contract  = get_ERC20contract_instance(contract_address)
     decimals  = contract.functions.decimals().call()
@@ -53,7 +53,8 @@ def topHolders(contract_address, amount):
         current_page += 1
         sleep(0.3)  #Rate Limit
         results = fetch_contract_transfer_events(contract_address, startblock=next_block)
-        
+    
+    #TODO: fix messy code
     df = pd.DataFrame.from_dict(holders, orient='index', columns=[symbol])
     df.reset_index(level=0, inplace=True)
     df.rename(columns={'index':'Address'}, inplace=True)
