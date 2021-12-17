@@ -5,6 +5,9 @@ The package can be run under virtual environments, or a docker image.
 
 ## Requirements 
 - Python 3.10 with pip
+- Click 
+- Web3py
+- Pandas 
 
 ## Setting Up 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install.
@@ -34,7 +37,7 @@ Commands:
   topHolder  Get current top holders for a given ERC20 contract.
   watchTx    Subscribe Tx from the contract_address in watching mode and...
 ```
-
+---
 
 
 ### `balanceOf <CONTRACT_ADDRESS> <TARGET_ADDRESS>`
@@ -117,3 +120,8 @@ Result:
    
 \^C[INFO] > Exit Signal Received
 ```
+
+---
+
+### Known issues
+- Python import executes the module when it was imported causing multiple `Connecting to RPC` to show when start. (Does not effect functionality)
